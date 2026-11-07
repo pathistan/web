@@ -1,0 +1,12 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // El sitio público puede consultar el contenido del portafolio.
+    match /{collection}/{document} {
+      allow read: if collection in ['profile', 'services', 'experience', 'projects', 'settings'];
+      // Solo usuarios autenticados en Firebase Authentication pueden modificar contenido.
+      allow create, update, delete: if request.auth != null
+        && collection in ['profile', 'services', 'experience', 'projects', 'settings'];
+    }
+  }
+}
